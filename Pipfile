@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pymodbus = "*"
 pyserial = "*"
+zmq = "*"
 
 [dev-packages]
 

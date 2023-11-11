@@ -8,7 +8,11 @@ MODBUS_ADDRESS = 2
 logger = logging.getLogger(__name__)
 
 class PAABSensor:
-    def __init__(self, port, address, enableWrites=False):
+    def __init__(self,
+                 port,
+                 baudrate=9600,
+                 address=MODBUS_ADDRESS,
+                 enableWrites=False):
         self._enableWrites = enableWrites
         self.client = ModbusSerialClient(method='rtu',
                                          port=port,
@@ -110,12 +114,12 @@ def run():
     paabSensor = PAABSensor(port="/dev/ttyUSB3",
                             address=MODBUS_ADDRESS,
                             enableWrites=True)
-    dumpAllRegisters(paabSensor)
+#    dumpAllRegisters(paabSensor)
  #   testRelays(paabSensor)
  #    testMeasure(paabSensor)
     #paabSensor.setAddress(address=2)
     #testMeasure(paabSensor)
-    #paabSensor.getReg1Value()
+    paabSensor.getReg1Value()
     
 if __name__ =="__main__":
     logFormatter = logging.Formatter("%(asctime)s [%(levelname)-7s][%(name)s] %(message)s")

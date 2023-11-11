@@ -1,0 +1,13 @@
+{
+  "measurement":     {
+      "port": "/dev/ttyUSB0",
+      "baudrate": "9600",
+      "modbusAddress": "2",
+      "sampleTime": "5",
+      "filterTime": "300",
+      "location": "water_well_1"
+  },
+    "network": {
+      "zmqPort" : "23123"
+  }
+}

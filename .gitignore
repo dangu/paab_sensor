@@ -1,1 +1,3 @@
-paab_sensor.log
+*.log
+config.json
+*~
