@@ -44,6 +44,26 @@ class PAABSensor:
             value |= 0x02
         self.setRegister(reg=relayReg, value=value)
 
+    def getReg1Value(self):
+        """Get register 1 value
+        Convert the register value to a signed integer"""
+        reg=1
+        result=self.getRegister(reg=reg)
+        if result.isError():
+             raise ValueError(f"Register: 0x{reg:02X} ({reg:3}), Error: {result}")
+
+        valueUnsigned=result.registers[0]
+        bytesUnsigned=valueUnsigned.to_bytes(2,
+                                             byteorder='big',
+                                             signed=False)
+        valueSigned=int.from_bytes(bytesUnsigned,
+                                   byteorder='big',
+                                   signed=True)
+        logger.info(f"Register: 0x{reg:02X} ({reg:3}), data: 0x{valueUnsigned:04X} ({valueSigned})")
+        return valueSigned
+
+
+        
     def setAddress(self, address):
         """Set new address"""
         self.setRegister(reg=0x20, value=address)
@@ -86,16 +106,16 @@ def testRelays(paabSensor):
     
     
 def run():
- #   dumpAllRegisters()
- #   testRelays()
- #    testMeasure()
 
     paabSensor = PAABSensor(port="/dev/ttyUSB3",
                             address=MODBUS_ADDRESS,
                             enableWrites=True)
+    dumpAllRegisters(paabSensor)
+ #   testRelays(paabSensor)
+ #    testMeasure(paabSensor)
     #paabSensor.setAddress(address=2)
-    testMeasure(paabSensor)
-    
+    #testMeasure(paabSensor)
+    #paabSensor.getReg1Value()
     
 if __name__ =="__main__":
     logFormatter = logging.Formatter("%(asctime)s [%(levelname)-7s][%(name)s] %(message)s")
