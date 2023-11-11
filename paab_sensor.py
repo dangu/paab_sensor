@@ -26,6 +26,7 @@ class PAABSensor:
         """Set register"""
         if self._enableWrites:
             result = self.client.write_register(reg, value, slave=self._address)
+            logger.debug(f"Result: {repr(result)}")
             if not result.isError():
                 logger.debug(f"Write {reg:04}:{value}")
             else:
@@ -42,12 +43,13 @@ class PAABSensor:
         if relaysState[1]:
             value |= 0x02
         self.setRegister(reg=relayReg, value=value)
-        
+
+    def setAddress(self, address):
+        """Set new address"""
+        self.setRegister(reg=0x20, value=address)
     
-def dumpAllRegisters():
+def dumpAllRegisters(paabSensor):
     """Dump all 255 registers"""
-    paabSensor = PAABSensor(port="/dev/ttyUSB0",
-                            address=MODBUS_ADDRESS)
     for reg in range(1,256):
         result=paabSensor.getRegister(reg=reg)
         if result.isError():
@@ -58,14 +60,8 @@ def dumpAllRegisters():
             logger.info(f"Register: 0x{reg:02X} ({reg:3}), data: 0x{valueUnsigned:04X} ({valueSigned})")
 
 
-def testMeasure():
+def testMeasure(paabSensor):
     """Measure register 1"""
-    paabSensor = PAABSensor(port="/dev/ttyUSB0",
-                            address=MODBUS_ADDRESS,
-                            enableWrites=True)
-    paabSensor.setRegister(reg=0x32,value=5)
-    paabSensor.setRegister(reg=0x3A,value=5)
-
     reg=0x01
     while(True):
         result=paabSensor.getRegister(reg=reg)
@@ -77,11 +73,8 @@ def testMeasure():
             logger.info(f"Register: 0x{reg:02X} ({reg:3}), data: 0x{valueUnsigned:04X} ({valueSigned})")
 
     
-def testRelays():
+def testRelays(paabSensor):
     """Test setting relay output"""
-    paabSensor = PAABSensor(port="/dev/ttyUSB0",
-                            address=MODBUS_ADDRESS,
-                            enableWrites=True)
     paabSensor.setRegister(reg=0x32,value=5)
     paabSensor.setRegister(reg=0x3A,value=5)
 
@@ -95,7 +88,14 @@ def testRelays():
 def run():
  #   dumpAllRegisters()
  #   testRelays()
-    testMeasure()
+ #    testMeasure()
+
+    paabSensor = PAABSensor(port="/dev/ttyUSB3",
+                            address=MODBUS_ADDRESS,
+                            enableWrites=True)
+    #paabSensor.setAddress(address=2)
+    testMeasure(paabSensor)
+    
     
 if __name__ =="__main__":
     logFormatter = logging.Formatter("%(asctime)s [%(levelname)-7s][%(name)s] %(message)s")
