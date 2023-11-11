@@ -9,14 +9,17 @@ import statistics
 
 class Transceiver:
     """Transmitter/receiver class"""
-    def __init__(self, filterTime, location):
+    def __init__(self,
+                 filterTime,
+                 location,
+                 onlySendWhenChanged):
         """Init"""
         self._dataDictFilt = {'waterLevel': []}
         self._lastValueDict = {'waterLevel':None}
         self._filterTimeSecs = filterTime
         self._location = location
         self._t0 = 0
-        self._onlySendWhenChanged = True
+        self._onlySendWhenChanged = onlySendWhenChanged
 
         self._logger = logging.getLogger("Transceiver")
         
@@ -104,16 +107,19 @@ def run():
     port=config['measurement']['port']
     baudrate=config['measurement']['baudrate']
     address=int(config['measurement']['modbusAddress'])
+    onlySendWhenChanged = config['measurement']['onlySendWhenChanged']=='1'
     zmqPort=config['network']['zmqPort']
 
     
     transceiver=Transceiver(filterTime=filterTime,
-                            location=location)
+                            location=location,
+                            onlySendWhenChanged=onlySendWhenChanged)
     transceiver.connectAndRun(port=port,
                               baudrate=baudrate,
                               address=address,
                               zmqPort=zmqPort,
                               sampleTime=sampleTime)
+                            
     
 if __name__=="__main__":
     run()

@@ -6,6 +6,7 @@
       "sampleTime": "5",
       "filterTime": "300",
       "location": "water_well_1"
+      "onlySendWhenChanged": "1"
   },
     "network": {
       "zmqPort" : "23123"
