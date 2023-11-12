@@ -75,7 +75,7 @@ class Transceiver:
                                         value=waterLevel)
                 time.sleep(sampleTime)
             except ValueError as e:
-                logger.error(f"Error reading sensor data: {e}")
+                self._logger.error(f"Error reading sensor data: {e}")
                 time.sleep(5)
 def run():
     """Run main functionality"""
